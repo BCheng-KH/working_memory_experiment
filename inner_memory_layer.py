@@ -7,7 +7,7 @@ from math import pi, sqrt
 z_p_approx_constant = sqrt(8/pi)
 
 def z_p_approx(z):
-    tf.math.sigmoid(z*z_p_approx_constant)
+    return tf.math.sigmoid(z*z_p_approx_constant)
 
 class InnerMemoryLayer(Layer):
     def __init__(self, units, activation='relu', use_bias = True, **kwargs):

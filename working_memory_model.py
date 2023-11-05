@@ -68,3 +68,6 @@ class WorkingMemoryModel(Model):
             layer.set_memory(memory[i])
     def update_learning_rate(self, learning_rate):
         self.optimizer = optimizers.Adam(learning_rate=learning_rate)
+    def empty_build(self, input):
+        self.call(input)
+        self.reset_memory()
