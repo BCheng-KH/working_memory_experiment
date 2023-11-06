@@ -7,6 +7,13 @@ from tensorflow.keras import activations, losses
 def make_flashing_mod_game(num_flashes, mod, period = 4):
     flashes = []
     labels = []
+
+    # averaging period
+    # flashes += [[0.0, random.random(), random.random(), random.random()] for _ in range(period)] + [[0.0, random.random(), random.random(), random.random()] for _ in range(period)]
+    # label = [0.0 for _ in range(mod)]
+    # labels += [label[:] for _ in range(period*2)]
+
+
     for i in range(num_flashes):
         flashes += [[1.0, random.random(), random.random(), random.random()] for _ in range(period)] + [[0.0, random.random(), random.random(), random.random()] for _ in range(period)]
         label = [0.0 for _ in range(mod)]

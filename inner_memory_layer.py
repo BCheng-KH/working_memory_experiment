@@ -74,9 +74,9 @@ class InnerMemoryLayer(Layer):
         
         ### Hebbian ###
 
-        self.ra_mean_activation = tf.zeros(shape=(self.units,),
-            dtype=dtype)
-        self.ra_variance = tf.zeros(shape=(self.units,),
+        self.ra_mean_activation = tf.ones(shape=(self.units,),
+            dtype=dtype)*0.5
+        self.ra_variance = tf.ones(shape=(self.units,),
             dtype=dtype)
         self.ra_h_factor = tf.zeros(shape=(self.units, last_dim),
             dtype=dtype)
@@ -169,8 +169,8 @@ class InnerMemoryLayer(Layer):
         
         self.factory = tf.ones_like(self.factory)*0.5
     def reset_hebbian_memory(self):
-        self.ra_mean_activation = tf.zeros_like(self.ra_mean_activation)
-        self.ra_variance = tf.zeros_like(self.ra_variance)
+        self.ra_mean_activation = tf.ones_like(self.ra_mean_activation)*0.5
+        self.ra_variance = tf.ones_like(self.ra_variance)
         self.ra_h_factor = tf.zeros_like(self.ra_h_factor)
     def reset_memory(self):
         self.reset_augmentation_memory()
