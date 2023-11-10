@@ -56,7 +56,7 @@ def make_association_game(num_bits, comb_num = 2, learning_length = 8, gap_lengt
     labels = tf.stack(labels)
     return inputs, labels
 
-def training_loop_association(model, num_bits, comb_num = 2, learning_length = 8, gap_length = 8, recall_length = 8, do_comb = None, ban_comb = [], do_print=False):
+def training_loop_association(model, num_bits, comb_num = 2, learning_length = 8, gap_length = 8, recall_length = 8, do_comb = None, ban_comb = [], do_print=False, do_train=True):
     
     inputs, label = make_association_game(num_bits, comb_num, learning_length, gap_length, recall_length, do_comb, ban_comb)
     with tf.GradientTape() as tape:
@@ -66,6 +66,7 @@ def training_loop_association(model, num_bits, comb_num = 2, learning_length = 8
         loss = mse(label, result)
         grads = tape.gradient(loss, model.trainable_weights())
     #print(grads)
-    model.apply_gradients(model.trainable_weights(), grads)
+    if do_train:
+        model.apply_gradients(model.trainable_weights(), grads)
     model.reset_memory()
     return loss
