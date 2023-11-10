@@ -41,22 +41,28 @@ def training_loop(model, min_flashes, max_flashes, do_print=False):
     return loss
 
 
-def make_association_game(num_bits, comb_num = 2, learning_length = 8, gap_length = 8, recall_length = 8):
-    chosen = random.sample(range(num_bits), k=comb_num)
+def make_association_game(num_bits, comb_num = 2, learning_length = 8, gap_length = 8, recall_length = 8, do_comb = None, ban_comb = []):
+    if do_comb:
+        chosen = do_comb
+    else:
+        chosen = random.sample(range(num_bits), k=comb_num)
+        while set(chosen) in ban_comb:
+            chosen = random.sample(range(num_bits), k=comb_num)
+    
     trigger = random.choice(chosen)
     inputs = [[1 if i in chosen else 0 for i in range(num_bits+1)] for _ in range(learning_length)] + [([random.random() for _ in range(num_bits)]+[1]) for _ in range(gap_length)] + [[1 if i == trigger else 0 for i in range(num_bits+1)] for _ in range(recall_length)]
     labels = [[1 if i in chosen else 0 for i in range(num_bits)] for _ in range(learning_length)] + [([0 for _ in range(num_bits)]) for _ in range(gap_length)] + [[1 if i in chosen else 0 for i in range(num_bits)] for _ in range(recall_length)]
     inputs = tf.stack(inputs)
-    label = tf.stack(labels)
+    labels = tf.stack(labels)
     return inputs, labels
 
-def training_loop_association(model, num_bits, comb_num = 2, learning_length = 8, gap_length = 8, recall_length = 8, do_print=False):
+def training_loop_association(model, num_bits, comb_num = 2, learning_length = 8, gap_length = 8, recall_length = 8, do_comb = None, ban_comb = [], do_print=False):
     
-    inputs, label = make_association_game(num_bits, comb_num, learning_length, gap_length, recall_length)
+    inputs, label = make_association_game(num_bits, comb_num, learning_length, gap_length, recall_length, do_comb, ban_comb)
     with tf.GradientTape() as tape:
         result = model(inputs)
         if do_print:
-            print(tf.round(result * 100) / 100, label)
+            print(inputs, tf.round(result * 100) / 100, label)
         loss = mse(label, result)
         grads = tape.gradient(loss, model.trainable_weights())
     #print(grads)
