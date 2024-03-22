@@ -66,20 +66,20 @@ class InnerMemoryLayer(Layer):
         
         # initializing untrainable values
 
-        self.resource = tf.ones(shape=(self.units, last_dim),
-            dtype=dtype)
+        self.resource = tf.Variable(name="resource", initial_value=tf.ones(shape=(self.units, last_dim),
+            dtype=dtype), dtype=dtype, trainable=False)
         
-        self.factory = tf.ones(shape=(self.units, last_dim),
-            dtype=dtype)*0.5
+        self.factory = tf.Variable(name="factory", initial_value=tf.ones(shape=(self.units, last_dim),
+            dtype=dtype)*0.5, dtype=dtype, trainable=False)
         
         ### Hebbian ###
 
-        self.ra_mean_activation = tf.ones(shape=(self.units,),
-            dtype=dtype)*0.5
-        self.ra_variance = tf.ones(shape=(self.units,),
-            dtype=dtype)
-        self.ra_h_factor = tf.zeros(shape=(self.units, last_dim),
-            dtype=dtype)
+        self.ra_mean_activation = tf.Variable(name="ra_mean_activation", initial_value=tf.ones(shape=(self.units,),
+            dtype=dtype)*0.5, dtype=dtype, trainable=False)
+        self.ra_variance = tf.Variable(name="ra_variance", initial_value=tf.ones(shape=(self.units,),
+            dtype=dtype), dtype=dtype, trainable=False)
+        self.ra_h_factor = tf.Variable(name="ra_h_factor", initial_value=tf.zeros(shape=(self.units, last_dim),
+            dtype=dtype), dtype=dtype, trainable=False)
         self.smoothing_factor = 0.1
     
     
@@ -160,6 +160,19 @@ class InnerMemoryLayer(Layer):
                 "units": self.units,
                 "activation": activations.serialize(self.activation),
                 "use_bias": self.use_bias,
+                "weight": self.weight,
+                "augment": self.augment,
+                "bias": self.bias,
+                "factory_upper": self.factory_upper,
+                "factory_lower": self.factory_lower,
+                "resource": self.resource,
+                "factory": self.factory,
+                "ra_mean_activation": self.ra_mean_activation,
+                "ra_variance": self.ra_variance,
+                "ra_h_factor": self.ra_h_factor,
+                "smoothing_factor": self.smoothing_factor,
+
+
             }
         )
         return config
